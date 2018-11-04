@@ -1,20 +1,10 @@
-
 import matplotlib.pyplot as plt
 import pandas as pd
-
 import sqlalchemy
 from tabulate import tabulate
 
-
-
-
-
-
-
-
-
 #read whole table from DB
-def readTableFromDB(db_table, db=engine, parse_dates=[], index_col="id", columns=None):    
+def readTableFromDB(db_table, db=engine, parse_dates=[], index_col="id", columns=None):
     return pd.read_sql_table(db_table,db,index_col = index_col, columns=columns,parse_dates=parse_dates)
 
 # User Input date and duration
@@ -22,7 +12,7 @@ def DateDuration():
     # Enter date
     while True:
         date_in = input("Enter Date (dd.mm.yyyy) [leave empty for today]: ")
-        if date_in == "": 
+        if date_in == "":
             date_in = datetime.date.today()
             day = date_in.day
             month = date_in.month
@@ -39,7 +29,7 @@ def DateDuration():
                 print("Couldn't interpret date! Try again ...")
 
     # Enter Duration
-    #horizontalSeperator()    
+    #horizontalSeperator()
     while True:
         duration_in = input("Enter Duration (hh:mm:ss): ")
         try:
@@ -66,9 +56,9 @@ def DateDuration():
     year = int(year)
 
     # Return a datetime
-    return datetime.datetime(year, 
-                             month, 
-                             day, 
+    return datetime.datetime(year,
+                             month,
+                             day,
                              hours,
                              minutes,
                              seconds)
@@ -90,7 +80,7 @@ class RunTrack(Base):
         return round(60/self.pace(),2)
 
     def __repr__(self):
-        return "<Running Track (id = '%s', date_duration='%s', pace='%s', speed='%s')>" % ( 
+        return "<Running Track (id = '%s', date_duration='%s', pace='%s', speed='%s')>" % (
                     self.id, self.date_duration, self.pace(), self.speed())
 
 class Route(Base):
@@ -102,9 +92,9 @@ class Route(Base):
     distance = Column("distance",Float, nullable=False)
 
     def __repr__(self):
-        return "<Running Route (id = '%s', name='%s', location='%s', distance='%s')>" % ( 
+        return "<Running Route (id = '%s', name='%s', location='%s', distance='%s')>" % (
                     self.id, self.name, self.location, self.distance)
-    
+
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()

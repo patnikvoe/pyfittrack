@@ -1,4 +1,4 @@
-from Fitness import *
+from main import *
 
 def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
@@ -22,7 +22,7 @@ def plot_goal_actuall(tracks, goals):
     speed = tracks["Speed"].resample("M").mean()
     speed = speed.to_frame(name="Mittlerer Speed")
     speed = speed.assign(Zielspeed=pastgoals["Zielspeed"])
-    
+
     fig, axes =plt.subplots(nrows=3,ncols=1)
 
     distanceplot = distance.plot(style=["k-","r-"], ax=axes[0], label="Strecke",sharex=True)

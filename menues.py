@@ -1,8 +1,6 @@
 from sys import platform
-from db_interface import horizontalSeperator
-from db_interface import showMountainSummits
 from plots import plot_goal_actuall
-from db_interface import addTrack, addRouteRunning, readTableFromDB, addMountain, addSport, addDifficulty
+from dbInterfacimg import readTableFromDB, addMountain, addSport, addDifficulty, showMountainSummits, horizontalSeperator
 import pandas as pd
 import os
 from time import sleep
@@ -11,7 +9,6 @@ from sqlalchemy import *
 from sqlalchemy import create_engine
 from sqlite3 import dbapi2 as sqlite
 import matplotlib.pyplot as plt
-import pandas as pd
 import time
 import datetime
 from tabulate import tabulate
@@ -44,10 +41,10 @@ def menumain():
                      3,
                      "",
                      0],
-               "Option": ["Add Menu", 
-                          "Show Data", 
+               "Option": ["Add Menu",
+                          "Show Data",
                           "Analysis Menu",
-                          "-------------",                          
+                          "-------------",
                           "Exit Programm"]}
     print(tabulate(options,headers = "keys",tablefmt="psql",showindex="never"))
     while True:
@@ -75,7 +72,7 @@ def menumain():
         print("Closing programm")
         horizontalSeperator()
         sleep(1)
-        quit()    
+        quit()
 
 def addMenu():
     while True:
@@ -91,9 +88,9 @@ def addMenu():
                          8,
                          "",
                          0],
-                   "Option": ["Add new running track", 
-                              "Add new alpine track", 
-                              "Add new running route", 
+                   "Option": ["Add new running track",
+                              "Add new alpine track",
+                              "Add new running route",
                               "Add new goals",
                               "Add new mountain",
                               "Add new sport",
@@ -116,13 +113,13 @@ def addMenu():
                 print("%s is an invalid Option. Try again!" % option)
         clear()
         print()
-        if option == 1: 
+        if option == 1:
             print("Add new running track")
             previousEntries = readTableFromDB(tb_tracksrun,engine, parse_dates=["dateduration"])
             previousEntries = previousEntries.sort_values(by=["date_duration"])
             print(tabulate(previousEntries[-5:],headers = "keys",tablefmt="psql"))
             addTrack(True)
-        elif option == 2: 
+        elif option == 2:
             print("Add new alpine track")
             previousEntries = readTableFromDB(tb_tracksalpine,engine,columns=["mountain_id", "sport_id", "date_duration", "summit","performancespeed"],parse_dates=["date_duration"])
             previousEntries = previousEntries.sort_values(by=["date_duration"])
@@ -147,7 +144,7 @@ def addMenu():
             print("Add new difficulty")
             print(tabulate(readTableFromDB(tb_difficulty,engine),headers = "keys",tablefmt="psql"))
             addDifficulty()
-        elif option == 8: 
+        elif option == 8:
             print("Add new weight")
             print(tabulate(readTableFromDB(tb_weight,engine,parse_dates=["date"]),headers = "keys",tablefmt="psql"))
         elif option == 0:
@@ -168,9 +165,9 @@ def showTablesMenu():
                          8,
                          "",
                          0],
-                   "Option": ["Show running track", 
-                              "Show alpine track", 
-                              "Show running route", 
+                   "Option": ["Show running track",
+                              "Show alpine track",
+                              "Show running route",
                               "Show goals",
                               "Show mountain",
                               "Show sport",
@@ -198,7 +195,7 @@ def showTablesMenu():
             tracks = readTableFromDB(tb_tracksrun,engine)
             tracks = tracks.sort_values(by=["date_duration"])
             print(tabulate(tracks,headers = "keys",tablefmt="psql"))
-            
+
             # Calculate the meanspeed
             meanspeed = tracks["speed"].mean()
 
@@ -207,15 +204,15 @@ def showTablesMenu():
                      "value": [tracks["pace"].mean(), meanspeed],
                      "units": ["min/km","km/h"]}
             print(tabulate(means,headers = "keys",tablefmt="psql"))
-            
-            # Summing all times            
+
+            # Summing all times
             runningTime = 0.0
             for index, row in tracks.iterrows():
                 hours = row["date_duration"].hour
                 minutes = row["date_duration"].minute
                 seconds = row["date_duration"].second
                 runningTime = runningTime + hours + (minutes + seconds/60)/60
-            
+
             # calculating distance and display it
             distance = {"Total Distance [km]": [runningTime*meanspeed]}
             print(tabulate(distance,headers = "keys",tablefmt="psql"))
@@ -252,7 +249,7 @@ def showTablesMenu():
         elif option == 0:
             clear()
             break
-        
+
 def analysisMenu():
     while True:
         print()
@@ -264,9 +261,9 @@ def analysisMenu():
                          5,
                          "",
                          0],
-                   "Option": ["Show Mountains with Summits", 
-                              "Analysis for skitouring", 
-                              "Analysis for hiking", 
+                   "Option": ["Show Mountains with Summits",
+                              "Analysis for skitouring",
+                              "Analysis for hiking",
                               "Analysis for running",
                               "Weight Analysis",
                               "---------------------------",
