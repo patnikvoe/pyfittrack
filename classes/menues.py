@@ -1,10 +1,10 @@
 from sys import platform
 from plots import plot_goal_actuall
-from dbInterfacimg import readTableFromDB, addMountain, addSport, addDifficulty, showMountainSummits, horizontalSeperator
+from classes.functions import readTableFromDB, horizontalSeperator
 import pandas as pd
 import os
 from time import sleep
-
+from pyfittracker import clear
 from sqlalchemy import *
 from sqlalchemy import create_engine
 from sqlite3 import dbapi2 as sqlite
@@ -12,26 +12,6 @@ import matplotlib.pyplot as plt
 import time
 import datetime
 from tabulate import tabulate
-
-PATH_TO_DB = "C:/Dropbox/Gesundheit/App/CL/data/patfit.db"
-connection_string = "sqlite+pysqlite:///{path_to_db}".format(path_to_db=PATH_TO_DB)
-engine = create_engine(connection_string, module=sqlite)
-
-tb_sport = "sport"
-tb_mountains = "mountains"
-tb_runroutes = "runroutes"
-tb_difficulty = "difficulty"
-tb_tracksrun = "tracksrun"
-tb_tracksalpine = "tracksalpine"
-tb_rungoals = "rungoals"
-tb_weight = "weight"
-
-if platform == "linux" or platform == "linux2" or platform == "darwin":
-    # linux and mac
-    clear = lambda: os.system("clear") #on Linux System
-elif platform == "win32":
-    # Windows...
-    clear = lambda: os.system("cls") #on Windows System
 
 def menumain():
     print()
