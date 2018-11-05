@@ -1,7 +1,7 @@
 #!/usr/bin/python3.6
 
 from sys import platform
-from menues import *
+from classes.menues import *
 import pandas as pd
 import os
 from time import sleep
@@ -10,6 +10,7 @@ import time
 import datetime
 from tabulate import tabulate
 from sqlalchemy import *
+
 # Import all classes
 from classes.classes import AlpineTrack
 from classes.classes import Country

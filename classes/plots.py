@@ -1,4 +1,4 @@
-from pyfittracker import *
+from pyfittrack import *
 
 def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail

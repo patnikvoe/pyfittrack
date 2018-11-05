@@ -1,10 +1,10 @@
 from sys import platform
-from plots import plot_goal_actuall
+from classes.plots import plot_goal_actuall
 from classes.functions import readTableFromDB, horizontalSeperator
 import pandas as pd
 import os
 from time import sleep
-from pyfittracker import clear
+from pyfittrack import clear
 from sqlalchemy import *
 from sqlalchemy import create_engine
 from sqlite3 import dbapi2 as sqlite
@@ -12,6 +12,17 @@ import matplotlib.pyplot as plt
 import time
 import datetime
 from tabulate import tabulate
+
+from classes.classes import AlpineTrack
+from classes.classes import Country
+from classes.classes import Difficulty
+from classes.classes import Mountain
+from classes.classes import MountainType
+from classes.classes import RouteRun
+from classes.classes import Sport
+from classes.classes import TrackRun
+from classes.classes import User
+from classes.classes import Weight
 
 def menumain():
     print()
@@ -142,13 +153,11 @@ def showTablesMenu():
                          5,
                          6,
                          7,
-                         8,
                          "",
                          0],
                    "Option": ["Show running track",
                               "Show alpine track",
                               "Show running route",
-                              "Show goals",
                               "Show mountain",
                               "Show sport",
                               "Show difficulty",
@@ -172,58 +181,55 @@ def showTablesMenu():
         print()
         if option == 1:
             print("Running Tracks:")
-            tracks = readTableFromDB(tb_tracksrun,engine)
-            tracks = tracks.sort_values(by=["date_duration"])
+            tracks = TrackRun.queryAll()
             print(tabulate(tracks,headers = "keys",tablefmt="psql"))
 
-            # Calculate the meanspeed
-            meanspeed = tracks["speed"].mean()
-
-            # Calculate the mean pace and display both means
-            means = {"mean of": ["pace","speed"],
-                     "value": [tracks["pace"].mean(), meanspeed],
-                     "units": ["min/km","km/h"]}
-            print(tabulate(means,headers = "keys",tablefmt="psql"))
+            # # Calculate the meanspeed
+            # meanspeed = tracks["speed"].mean()
+            #
+            # # Calculate the mean pace and display both means
+            # means = {"mean of": ["pace","speed"],
+            #          "value": [tracks["pace"].mean(), meanspeed],
+            #          "units": ["min/km","km/h"]}
+            # print(tabulate(means,headers = "keys",tablefmt="psql"))
 
             # Summing all times
-            runningTime = 0.0
-            for index, row in tracks.iterrows():
-                hours = row["date_duration"].hour
-                minutes = row["date_duration"].minute
-                seconds = row["date_duration"].second
-                runningTime = runningTime + hours + (minutes + seconds/60)/60
-
-            # calculating distance and display it
-            distance = {"Total Distance [km]": [runningTime*meanspeed]}
-            print(tabulate(distance,headers = "keys",tablefmt="psql"))
+            # runningTime = 0.0
+            # for index, row in tracks.iterrows():
+            #     hours = row["date_duration"].hour
+            #     minutes = row["date_duration"].minute
+            #     seconds = row["date_duration"].second
+            #     runningTime = runningTime + hours + (minutes + seconds/60)/60
+            #
+            # # calculating distance and display it
+            # distance = {"Total Distance [km]": [runningTime*meanspeed]}
+            # print(tabulate(distance,headers = "keys",tablefmt="psql"))
 
         elif option == 2:
             print("Alpine Tracks:")
-            tracks = readTableFromDB(tb_tracksalpine,engine,columns=["date_duration","sport_id","mountain_id","distance","ascend","descend","performancespeed"])
-            tracks = tracks.sort_values(by=["date_duration"])
+            tracks = AlpineTrack.queryAll()
             print(tabulate(tracks,headers = "keys",tablefmt="psql"))
         elif option == 3:
             print("Running Routes:")
-            routes = readTableFromDB(tb_runroutes,engine)
+            routes = RouteRun.queryAll()
             print(tabulate(routes,headers = "keys",tablefmt="psql"))
         elif option == 4:
-            print("Goals:")
-            print(tabulate(readTableFromDB(tb_rungoals,engine,columns=["date","distancegoal"]),headers = "keys",tablefmt="psql"))
-        elif option == 5:
             print("Mountains:")
-            mountains = readTableFromDB(tb_mountains,engine,columns=["name","countrycode","elevation","type"])
-            print(tabulate(mountains.sort_values(by=["name"]),headers = "keys",tablefmt="psql"))
-        elif option == 6:
+            mountains = Mountain.queryAll()
+            mountains = mountains.sort_values(by=["name"])
+            print(tabulate(mountains,headers = "keys",tablefmt="psql"))
+        elif option == 5:
             print("Sports:")
-            sports = readTableFromDB(tb_sport,engine)
+            sports = Sport.queryAll()
             sports = sports.sort_values(by=["sport"])
             print(tabulate(sports,headers = "keys",tablefmt="psql"))
-        elif option == 7:
+        elif option == 6:
+            dif = Difficulty.queryAll()
             print("Difficulties:")
-            print(tabulate(readTableFromDB(tb_difficulty,engine),headers = "keys",tablefmt="psql"))
-        elif option == 8:
+            print(tabulate(dif,headers = "keys",tablefmt="psql"))
+        elif option == 7:
             print("Weight:")
-            weight = readTableFromDB(tb_weight,engine)
+            weight = Weight.queryAll()
             weight = weight.sort_values(by=["date"])
             print(tabulate(weight, headers = "keys",tablefmt="psql"))
         elif option == 0:
