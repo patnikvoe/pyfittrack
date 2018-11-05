@@ -24,6 +24,12 @@ from classes.Weight import Weight
 # Database connection
 from classes import Base, Engine, Session, session
 
+if platform == "linux" or platform == "linux2" or platform == "darwin":
+    # linux and mac
+    clear = lambda: os.system("clear") #on Linux System
+elif platform == "win32":
+    # Windows...
+    clear = lambda: os.system("cls") #on Windows System
 
 def main():
     #set Pandas max rows
