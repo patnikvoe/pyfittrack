@@ -1,14 +1,18 @@
 # class variables
 ## table names:
-from classes import tb_users, tb_weight, tb_mtype, tb_sport, tb_mountains, tb_routes, tb_difficulty, tb_country, tb_tracksrun, tb_tracksalpine
+from classes import tb_users, tb_weight, tb_mtype, tb_sport, tb_mountains,
+    tb_routes, tb_difficulty, tb_country, tb_tracksrun, tb_tracksalpine
 ## id sequence names:
-from classes import user_id, sport_id, mountain_id, route_id, difficulty_id, trackrun_id, trackalpine_id, weight_id, mtype_id, country_id
+from classes import user_id, sport_id, mountain_id, route_id, difficulty_id,
+    trackrun_id, trackalpine_id, weight_id, mtype_id, country_id
 ## PostSQL DataTypes
-from classes import Column, Integer, Sequence, Date, Boolean, Float, String, ForeignKey, DateTime, Text
+from classes import Column, Integer, Sequence, Date, Boolean, Float, String,
+    ForeignKey, DateTime, Text
 ## SQLAlchemy connection
 from classes import Base, Engine, relationship, session
 # functions
-from functions import enterDate, horizontalSeperator, saveNewInput, readTableFromDB, invalidInput, enterDateDuration, tabulate, convertStringToFloat, moveToDatabase
+from functions import enterDate, horizontalSeperator, saveNewInput, readTableFromDB,
+    invalidInput, enterDateDuration, tabulate, convertStringToFloat, moveToDatabase
 # pandas, log10
 from classes import pd, log10
 
