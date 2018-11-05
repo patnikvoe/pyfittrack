@@ -11,16 +11,16 @@ import datetime
 from tabulate import tabulate
 from sqlalchemy import *
 # Import all classes
-from classes.AlpineTrack import AlpineTrack
-from classes.Country import Country
-from classes.Difficulty import Difficulty
-from classes.Mountain import Mountain
-from classes.MountainType import MountainType
-from classes.RouteRun import RouteRun
-from classes.Sport import Sport
-from classes.TrackRun import TrackRun
-from classes.User import User
-from classes.Weight import Weight
+from classes.classes import AlpineTrack
+from classes.classes import Country
+from classes.classes import Difficulty
+from classes.classes import Mountain
+from classes.classes import MountainType
+from classes.classes import RouteRun
+from classes.classes import Sport
+from classes.classes import TrackRun
+from classes.classes import User
+from classes.classes import Weight
 # Database connection
 from classes import Base, Engine, Session, session
 
