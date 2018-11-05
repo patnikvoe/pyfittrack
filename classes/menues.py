@@ -115,7 +115,7 @@ def addMenu():
         print()
         if option == 1:
             print("Add new running track")
-            previousEntries = readTableFromDB(tb_tracksrun,engine, parse_dates=["dateduration"])
+            previousEntries = readTableFromDB(tb_tracksrun,engine, parse_dates=["DateDuration"])
             previousEntries = previousEntries.sort_values(by=["date_duration"])
             print(tabulate(previousEntries[-5:],headers = "keys",tablefmt="psql"))
             addTrack(True)
