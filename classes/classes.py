@@ -22,6 +22,7 @@ class MountainType(Base):
     id = Column(Integer, Sequence(mtype_id), primary_key=True)
     name = Column("name",String(50), nullable = False)
 
+    # self representation
     def __repr__(self):
         return "<Mountain Type (id = '%s', name='%s')>" % (self.id, self.name)
 
@@ -67,6 +68,7 @@ class Sport(Base):
     id = Column(Integer, Sequence(sport_id), primary_key=True)
     name = Column("Sport",String(30), nullable = False)
 
+    # self representation
     def __repr__(self):
         return "New Sport:\n%s" %(self.name)
 
@@ -125,8 +127,14 @@ class AlpineTrack(Base):
     difficulty_id = Column(Integer, ForeignKey("%s.id" %(tb_difficulty)))
     difficulty = relationship("Difficulty")
 
+    # self representation
     def __repr__(self):
         return "<Mountains (id = '%s', name='%s', country='%s', mountainrange='%s', elevation='%s', mountaintype='%s')>" % (self.id, self.name, self.country.name, self.mrange, self.elevation, self.mtype.name)
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_tracksalpine,Engine)
 
     # new AlpineTrack
     @classmethod
@@ -189,6 +197,7 @@ class Difficulty(Base):
     sport_id = Column(Integer, ForeignKey("%s.id" %(tb_sport)))
     sport = relationship("Sport")
 
+    # self representation
     def __repr__(self):
         return "<Difficulty (id = '%s', code='%s', sport='%s', description='%s')>" % (
                     self.id, self.code, self.sport.name, self.description)
@@ -208,7 +217,6 @@ class Difficulty(Base):
         print("New Sport:\n%s" %(newD.name))
         # Ask if User wants to save new sport
         saveNewInput("sport", newD)
-
 
     # Query for all and return as panda
     @classmethod
@@ -241,8 +249,15 @@ class Country(Base):
     name = Column("name",String(80), nullable = False)
     code = Column("code",String(5), nullable = False)
 
+    # self representation
     def __repr__(self):
         return "<Country (id = '%s', name='%s', countrycode='%s')>" % (self.id, self.name, self.code)
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_country
+        ,Engine)
 
 ####################################################################################
 ####################################################################################
@@ -262,9 +277,15 @@ class Mountain(Base):
     country_id = Column(Integer, ForeignKey("%s.id" %(tb_country)))
     country = relationship("Country")
 
+    # self representation
     def __repr__(self):
         return "<Mountains (id = '%s', name='%s', country='%s', mountainrange='%s', elevation='%s', mountaintype='%s')>" % (
                     self.id, self.name, self.country.name, self.mrange, self.elevation, self.mtype.name)
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_mountains,Engine)
 
     # new Mountain
     @classmethod
@@ -291,14 +312,20 @@ class Mountain(Base):
 ####################################################################################
 # Class Definition: TRACKRUN
 class TrackRun(Base):
-    __tablename__=tb_tracksrun
+    __tablename__ = tb_tracksrun
     id = Column(Integer, Sequence(trackrun_id), primary_key=True)
     date_duration = Column('date_duration',DateTime, nullable = False)
     route_id = Column(Integer, ForeignKey("%s.id" %(tb_routes)))
     route = relationship("RouteRun")
 
+    # self representation
     def __repr__(self):
         return "<Running Track (id = '%s', date_duration='%s', pace='%s', speed='%s')>" % (self.id, self.date_duration, self.pace(), self.speed())
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_tracksrun,Engine)
 
     # Calculate pace
     def pace(self):
@@ -339,8 +366,62 @@ class User(Base):
 
     weights= relationship("Weight", back_populates="user")
 
+    # self representation
     def __repr__(self):
         return "New User:\nName: %s\nBirthday: %s\nMale: %s\nHeight: %s" %(self.name, self.birthday, self.male, self.height)
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_users,Engine, parse_dates="birthday")
+
+    # Add new user
+    @classmethod
+    def new (self):
+        print()
+        newU = User()
+        # Ask for Name of User
+        newU.name = input("Enter Name of User: ")
+        # Ask for birthday of user
+        print("Birthday of user %s: "%(newU.name))
+        newU.birthday = enterDate()
+        # Ask for male or female
+        while True:
+            i = input("Is the user female or male? (f/m): ")
+            if i=="f" or i=="F":
+                newU.male = False
+                break
+            elif i=="m" or i == "M":
+                newU.male = True
+                break
+            else:
+                print("Invalid Input! Try again!")
+        # Ask for heigt of user
+        newU.height = int(input("Enter height of user %s (in cm): " %(newU.name)))
+        # Print what was entered
+        horizontalSeperator()
+        print("New User:\nName: %s\nBirthday: %s\nMale: %s\nHeight: %s cm" %(newU.name, newU.birthday, newU.male,newU.height))
+        # Ask to save or delete
+        saveNewInput("User", newU)
+        pass
+
+    # selecting a User from the list in postgreSQL
+    @classmethod
+    def select(self):
+        users = readTableFromDB(tb_users,Engine, parse_dates="birthday")
+        print(tabulate(users,headers = "keys",tablefmt="psql"))
+        while True:
+            selection = int(input("Select User: "))
+            if selection > 0:
+                try:
+                    users.iloc[selection-1]
+                except IndexError:
+                    invalidInput()
+                else:
+                    break
+            elif selection == 0:
+                invalidInput()
+        return selection
 
     # Calculate the current age of User
     def age(self):
@@ -391,59 +472,6 @@ class User(Base):
             pass
         pass
 
-    # Add new user
-    @classmethod
-    def new (self):
-        print()
-        newU = User()
-        # Ask for Name of User
-        newU.name = input("Enter Name of User: ")
-        # Ask for birthday of user
-        print("Birthday of user %s: "%(newU.name))
-        newU.birthday = enterDate()
-        # Ask for male or female
-        while True:
-            i = input("Is the user female or male? (f/m): ")
-            if i=="f" or i=="F":
-                newU.male = False
-                break
-            elif i=="m" or i == "M":
-                newU.male = True
-                break
-            else:
-                print("Invalid Input! Try again!")
-        # Ask for heigt of user
-        newU.height = int(input("Enter height of user %s (in cm): " %(newU.name)))
-        # Print what was entered
-        horizontalSeperator()
-        print("New User:\nName: %s\nBirthday: %s\nMale: %s\nHeight: %s cm" %(newU.name, newU.birthday, newU.male,newU.height))
-        # Ask to save or delete
-        saveNewInput("User", newU)
-        pass
-
-    # Query for all and return as panda
-    @classmethod
-    def queryAll(self):
-        return readTableFromDB(tb_users,Engine, parse_dates="birthday")
-
-    # selecting a User from the list in postgreSQL
-    @classmethod
-    def select(self):
-        users = readTableFromDB(tb_users,Engine, parse_dates="birthday")
-        print(tabulate(users,headers = "keys",tablefmt="psql"))
-        while True:
-            selection = int(input("Select User: "))
-            if selection > 0:
-                try:
-                    users.iloc[selection-1]
-                except IndexError:
-                    invalidInput()
-                else:
-                    break
-            elif selection == 0:
-                invalidInput()
-        return selection
-
 ####################################################################################
 ####################################################################################
 ####################################################################################
@@ -461,9 +489,16 @@ class Weight(Base):
     user_id = Column(Integer, ForeignKey("%s.id" %(tb_users)))
     user = relationship("User",back_populates="weights")
 
-    def __repr__(self):
+    # self representation
+      def __repr__(self):
         return "<Weight (username='%s', date='%s', weight='%s', avgBodyfat='%.1f')>" % (
                     self.user.name, self.date, self.weight, self.bodyfat())
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_weight,Engine)
+
 
     #calculate bodyfat in %
     def bodyfat(self):
@@ -473,10 +508,6 @@ class Weight(Base):
             bf = 495/(1.29579-0.35004*log10(self.waist+self.hip -self.neck)+0.22100*log10(self.user.height))-450
         return round(bf,1)
 
-    # Query for all and return as panda
-    @classmethod
-    def queryAll(self):
-        return readTableFromDB(tb_weight,Engine)
 
 ####################################################################################
 ####################################################################################
@@ -490,8 +521,15 @@ class RouteRun(Base):
     location = Column("location",String(30), nullable=False)
     distance = Column("distance",Float, nullable=False)
 
+
+    # self representation
     def __repr__(self):
         return "New Route for Running:\n%s\n%s\n%.2f" %(newR.name,newR.location, newR.distance)
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return readTableFromDB(tb_routes,Engine)
 
     # new Route for running
     @classmethod
@@ -509,11 +547,6 @@ class RouteRun(Base):
         print("New Route for Running:\n%s\n%s\n%.2f" %(newR.name,newR.location, newR.distance))
         # Ask if User wants to save new route
         saveNewInput("Route for Running", newR)
-
-    # Query for all and return as panda
-    @classmethod
-    def queryAll(self):
-        return readTableFromDB(tb_routes,Engine)
 
     # selecting a Sport from the list in postgreSQL
     @classmethod
