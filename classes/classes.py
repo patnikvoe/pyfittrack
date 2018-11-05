@@ -38,7 +38,7 @@ class MountainType(Base):
         # Ask if User wants to save new Monutain Type
         saveNewInput("mountain type", newType)
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def queryAll(self):
         return readTableFromDB(tb_mtype,Engine)
@@ -83,7 +83,7 @@ class Sport(Base):
         # Ask if User wants to save new sport
         saveNewInput("sport", newSport)
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def queryAll(self):
         return readTableFromDB(tb_sport,Engine)
@@ -210,12 +210,12 @@ class Difficulty(Base):
         saveNewInput("sport", newD)
 
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def queryAll(self):
         return pd.read_sql_table(tb_difficulty,Engine, index_col="id")
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def select(sport, self):
         # Query from postgreSQL
@@ -421,7 +421,7 @@ class User(Base):
         saveNewInput("User", newU)
         pass
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def queryAll(self):
         return readTableFromDB(tb_users,Engine, parse_dates="birthday")
@@ -473,7 +473,7 @@ class Weight(Base):
             bf = 495/(1.29579-0.35004*log10(self.waist+self.hip -self.neck)+0.22100*log10(self.user.height))-450
         return round(bf,1)
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def queryAll(self):
         return readTableFromDB(tb_weight,Engine)
@@ -510,7 +510,7 @@ class RouteRun(Base):
         # Ask if User wants to save new route
         saveNewInput("Route for Running", newR)
 
-    # Query for all and save as panda
+    # Query for all and return as panda
     @classmethod
     def queryAll(self):
         return readTableFromDB(tb_routes,Engine)
