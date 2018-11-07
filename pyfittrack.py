@@ -1,36 +1,20 @@
 #!/usr/bin/python3.6
 
-from sys import platform
-from classes.menues import *
-import pandas as pd
-import os
-from time import sleep
-import matplotlib.pyplot as plt
-import time
-import datetime
-from tabulate import tabulate
-from sqlalchemy import *
+# import required modules from classes
+from classes import pd
+
+#import Menues
+from classes.menues import menumain, addMenu, showTablesMenu, analysisMenu
 
 # Import all classes
-from classes.classes import AlpineTrack
-from classes.classes import Country
-from classes.classes import Difficulty
-from classes.classes import Mountain
-from classes.classes import MountainType
-from classes.classes import RouteRun
-from classes.classes import Sport
-from classes.classes import TrackRun
-from classes.classes import User
-from classes.classes import Weight
+from classes.classes import AlpineTrack, Country, Difficulty, Mountain, MountainType, RouteRun, Sport, TrackRun, User, Weight
+
 # Database connection
 from classes import Base, Engine, Session, session
+from classes.functions import clear
 
-if platform == "linux" or platform == "linux2" or platform == "darwin":
-    # linux and mac
-    clear = lambda: os.system("clear") #on Linux System
-elif platform == "win32":
-    # Windows...
-    clear = lambda: os.system("cls") #on Windows System
+# create Database if necessary
+Base.metadata.create_all(Engine)
 
 def main():
     #set Pandas max rows
