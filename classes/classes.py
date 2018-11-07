@@ -8,7 +8,7 @@ from classes import Column, Integer, Sequence, Date, Boolean, Float, String, For
 ## SQLAlchemy connection
 from classes import Base, Engine, relationship, session
 # functions
-from classes.functions import enterDate, horizontalSeperator, saveNewInput, readTableFromDB, invalidInput, enterDateDuration, tabulate, convertStringToFloat, moveToDatabase
+from classes.functions import *
 # pandas, log10
 from classes import pd, log10
 
@@ -103,6 +103,13 @@ class Sport(Base):
                 invalidInput()
         return selection
 
+    # selecting a Sport from the list in postgreSQL
+    @classmethod
+    def selectName(self, ID):
+        selection = readTableFromDB(tb_sport,Engine)
+        selection = selection.iloc[ID-1]
+        selection = selection['Sport']
+        return selection
 ####################################################################################
 ####################################################################################
 ####################################################################################
@@ -195,6 +202,7 @@ class Difficulty(Base):
     code = Column("code", String(10), nullable=False)
     description = Column("description", Text)
     sport_id = Column(Integer, ForeignKey("%s.id" %(tb_sport)))
+
     sport = relationship("Sport")
 
     # self representation
@@ -423,6 +431,20 @@ class User(Base):
                 invalidInput()
         return selection
 
+    # is User male or female?
+    @classmethod
+    def isMale(UID):
+        for user in session.query(User).filter(User.id==UID):
+            pat = User(name=user.name,birthday=user.birthday,male =user.male, height=user.height)
+        return pat.male
+
+    # how tall is user UID
+    @classmethod
+    def Height(UID):
+        for user in session.query(User).filter(User.id==UID):
+            pat = User(name=user.name,birthday=user.birthday,male =user.male, height=user.height)
+        return pat.height
+
     # Calculate the current age of User
     def age(self):
         today = date.today()
@@ -497,16 +519,25 @@ class Weight(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_weight,Engine)
+        # create empty Dataframe
+        d = pd.DataFrame(columns=["date", "weight", "waist", "neck", "hip", "bf", "male", "height", "user_id"])
+        users = pd.DataFrame()
+        # Append postgreSQL Table
+        d = d.append(readTableFromDB(tb_weight,Engine), sort = False)
+        users = users.append(readTableFromDB(tb_users,Engine), sort = False)
+        # extract user height, male
+        height = users.height.to_dict()
+        male = users.male.to_dict()
+        d["male"] = d.user_id.map(male)
+        d["height"] = d.user_id.map(height)
 
+        # iterate through DataFrame
+        for index, row in d.iterrows():
+            bodyf = bodyfat(row['waist'],row['neck'],row['hip'],row['height'],row['male'])
+            d.at[index, "bf"] = bodyf
 
-    #calculate bodyfat in %
-    def bodyfat(self):
-        if self.user.male:
-            bf = 495/(1.0324-0.19077*log10(self.waist-self.neck)+0.15456*log10(self.user.height))-450
-        else:
-            bf = 495/(1.29579-0.35004*log10(self.waist+self.hip -self.neck)+0.22100*log10(self.user.height))-450
-        return round(bf,1)
+        return d
+
 
 
 ####################################################################################
