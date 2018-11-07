@@ -50,24 +50,7 @@ Weight(date = "2018-04-30",weight = 78.8, neck= 39.0, waist= 83.0, hip=0.0, user
 Weight(date = "2018-05-15",weight = 79.6, neck= 39.5, waist= 83.5, hip=0.0, user_id=1),
 Weight(date = "2018-05-15",weight = 79.0, neck= 40.0, waist= 82.0, hip=0.0, user_id=1),
 Weight(date = "2018-05-21",weight = 80.3, neck= 40.5, waist= 83.0, hip=0.0, user_id=1),
-Weight(date = "2018-11-07",weight = 83.5, neck= 41.0, waist= 91.0, hip=0.0, user_id=1),
-
-Weight(date = "2018-01-05",weight = 82.2, neck= 40.0, waist= 84.0, hip=100.0, user_id=2),
-Weight(date = "2018-01-11",weight = 81.3, neck= 39.5, waist= 84.0, hip=100.0, user_id=2),
-Weight(date = "2018-01-14",weight = 81.6, neck= 40.0, waist= 83.5, hip=100.0, user_id=2),
-Weight(date = "2018-01-18",weight = 82.1, neck= 40.0, waist= 86.0, hip=100.0, user_id=2),
-Weight(date = "2018-02-01",weight = 81.5, neck= 39.0, waist= 89.0, hip=100.0, user_id=2),
-Weight(date = "2018-02-25",weight = 81.6, neck= 41.0, waist= 83.5, hip=100.0, user_id=2),
-Weight(date = "2018-03-04",weight = 80.5, neck= 41.0, waist= 82.8, hip=100.0, user_id=2),
-Weight(date = "2018-03-14",weight = 79.9, neck= 41.0, waist= 83.5, hip=100.0, user_id=2),
-Weight(date = "2018-04-10",weight = 79.0, neck= 39.0, waist= 82.0, hip=100.0, user_id=2),
-Weight(date = "2018-04-15",weight = 79.4, neck= 40.0, waist= 84.2, hip=100.0, user_id=2),
-Weight(date = "2018-04-23",weight = 78.6, neck= 39.0, waist= 83.0, hip=100.0, user_id=2),
-Weight(date = "2018-04-30",weight = 78.8, neck= 39.0, waist= 83.0, hip=100.0, user_id=2),
-Weight(date = "2018-05-15",weight = 79.6, neck= 39.5, waist= 83.5, hip=100.0, user_id=2),
-Weight(date = "2018-05-15",weight = 79.0, neck= 40.0, waist= 82.0, hip=100.0, user_id=2),
-Weight(date = "2018-05-21",weight = 80.3, neck= 40.5, waist= 83.0, hip=100.0, user_id=2),
-Weight(date = "2018-11-07",weight = 83.5, neck= 41.0, waist= 91.0, hip=100.0, user_id=2)])
+Weight(date = "2018-11-07",weight = 83.5, neck= 41.0, waist= 91.0, hip=0.0, user_id=1)])
 
 session.commit()
 
