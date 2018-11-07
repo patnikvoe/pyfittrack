@@ -6,9 +6,6 @@ from classes.functions import moveToDatabase
 from classes import Base, Engine, session
 from sqlalchemy import *
 
-Base.metadata.create_all(Engine)
-
-
 UID = 13
 
 for user in session.query(User).filter(User.id==UID):
