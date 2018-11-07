@@ -12,13 +12,22 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
 import time
+import os
 from math import log10
 import pandas as pd
+import textwrap
+from tabulate import tabulate
+import matplotlib.pyplot as plt
+from sys import platform
+from time import sleep
 
-Engine = create_engine("postgresql://pyfittracker:Fuss93ball6@localhost:5432/pyfittracker")
+
+Engine = create_engine("postgresql://pyfittracker:Fuss93ball6@localhost:5432/pyfittrack")
 Base = declarative_base()
 Session = sessionmaker(bind=Engine)
 session = Session()
+
+descriptionWrap = textwrap.TextWrapper(width = 100, initial_indent=" ", subsequent_indent=" ")
 
 # Columns in Database
 tb_sport = "sport"
