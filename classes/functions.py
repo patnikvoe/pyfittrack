@@ -1,12 +1,36 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import time
-import datetime
-import sqlalchemy
-from tabulate import tabulate
+from classes import log10, pd, time, datetime, tabulate, platform, os
 
 # Database connection
 from classes import Base, Engine, Session, session
+
+#################################################################################
+# Clear depending on OS
+if platform == "linux" or platform == "linux2" or platform == "darwin":
+    # linux and mac
+    clear = lambda: os.system("clear") #on Linux System
+elif platform == "win32":
+    # Windows...
+    clear = lambda: os.system("cls") #on Windows System
+
+#################################################################################
+#calculate bodyfat for males in %
+def bodyfatMale(waist, neck, height):
+    bf = 495/(1.0324-0.19077*log10(waist-neck)+0.15456*log10(height))-450
+    return round(bf,1)
+
+#################################################################################
+#calculate bodyfat for females in %
+def bodyfatFemale(waist, neck, hip, height):
+    bf = 495/(1.29579-0.35004*log10(waist+hip-neck)+0.22100*log10(height))-450
+    return round(bf,1)
+
+#################################################################################
+# select Proper calculations based on user gender
+def bodyfat(waist,neck,hip,height,male):
+    if male:
+        return bodyfatMale(waist, neck, height)
+    else:
+        return bodyfatFemale(waist, neck, hip, height)
 
 #################################################################################
 # Convert an string to float
@@ -20,14 +44,44 @@ def convertStringToFloat(input):
 #################################################################################
 # Error message for invalid input
 def invalidInput():
-    horizontalSeperator()
+    horizontalSeperator(string ="!")
     print("Invalid Input! Try again!")
     pass
 
 #################################################################################
+# Print menu function
+def printMenu(dict):
+    printPanda(dict, printIndex=False)
+    pass
+
+#################################################################################
+# print Pandas
+def printPanda(panda, header = "keys", format = "psql", printIndex = True):
+    print(tabulate(panda, headers = header,tablefmt=format, showindex=printIndex))
+    pass
+
+#################################################################################
+# print the title
+def printTitle(title):
+    string = "|  %s  |" % title
+    horizontalSeperator(length = len(string)-2)
+    print(string)
+    horizontalSeperator(length = len(string)-2)
+    pass
+    
+#################################################################################
 # Horizontal Seperator
 def horizontalSeperator(string = "-",length = 42):
     print("+" + (string*(length//len(string)+1))[:length] + "+")
+    pass
+
+#################################################################################
+# Horizontal Seperator for show menu
+def horizontalSeperatorWeight(male):
+    if male:
+        print("+------------+---------+---------------+----------------+-----------------+")
+    else:
+        print("+------------+---------+---------------+----------------+---------------+-----------------+")
     pass
 
 #################################################################################
