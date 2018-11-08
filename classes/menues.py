@@ -334,12 +334,25 @@ def showTablesMenu():
         # works as expected
         elif option == 7:
             printTitle("Difficulties")
-            horizontalSeperator(length=descriptionWrap.width)
             dif = Difficulty.queryAll()
-            dif = dif.sort_values(["sport_id","code"])
+            sports = Sport.queryAll()
+            dif["sport"] = dif.sport_id.map(sports.Sport.to_dict())
+            dif = dif.sort_values(["sport","code"])
+            dif = dif.reset_index(drop = True)
             for index, row in dif.iterrows():
-                row["sport_id"] = Sport.selectName(row["sport_id"])
-                string = "| %s | Code: %s | Description:"  %(row["sport_id"], row["code"])
+                try:
+                    bool = dif.at[index, "sport"] != dif.at[index-1, "sport"]
+                except KeyError:
+                    print()
+                    printTitle("{}".format(dif.at[index, "sport"]))
+                    horizontalSeperator(length=descriptionWrap.width)
+                else:
+                    if bool:
+                        print()
+                        printTitle("{}".format(dif.at[index, "sport"]))
+                        horizontalSeperator(length=descriptionWrap.width)
+
+                string = "| Code: %s | Description:"  %(row["code"])
                 print(string)
                 horizontalSeperator(length=len(string)-15)
                 print("%s" %(descriptionWrap.fill(row["description"])))
@@ -361,7 +374,6 @@ def showTablesMenu():
                     string, array = stringArrayRowWeight(we.at[index, "male"], row)
                     horizontalSeperatorMulti(array)
                 elif we.at[index, "username"] != we.at[index-1,"username"]:
-                    string, array = stringArrayRowWeight(we.at[index-1, "male"], row)
                     horizontalSeperatorMulti(array)
                     printTitle("{0}".format(we.at[index, "username"]))
                     string, array = stringArrayRowWeight(we.at[index, "male"], row)
