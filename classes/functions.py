@@ -68,7 +68,7 @@ def printTitle(title):
     print(string)
     horizontalSeperator(length = len(string)-2)
     pass
-    
+
 #################################################################################
 # Horizontal Seperator
 def horizontalSeperator(string = "-",length = 42):
@@ -76,13 +76,32 @@ def horizontalSeperator(string = "-",length = 42):
     pass
 
 #################################################################################
-# Horizontal Seperator for show menu
-def horizontalSeperatorWeight(male):
-    if male:
-        print("+------------+---------+---------------+----------------+-----------------+")
-    else:
-        print("+------------+---------+---------------+----------------+---------------+-----------------+")
+# Horizontal Seperator for multiple plus signs
+def horizontalSeperatorMulti(array):
+
+    for i in range(len(array)):
+        lengthString = len(str(array[i]))+2
+
+        if i == 0:
+            seperatorString = "+" + "-"*lengthString + "+"
+            string = "| %s |" %array[i]
+        else:
+            seperatorString += "-"*lengthString + "+"
+            string += " %s |" %array[i]
+
+    print(seperatorString)
     pass
+
+#################################################################################
+# generate String for print and Array for horizontalSeperatorMulti
+def stringArrayRowWeight(male, row):
+    if male:
+        array = [row["date"].strftime("%Y-%m-%d"), "%.1f kg" %row["weight"], "Neck: %.1f cm" % row["neck"], "Waist: %.1f cm" %row["waist"], "Bodyfat: {:.1f} %".format(row["bf"])]
+        string = "| {} | {} | {} | {} | {} |".format(array[0], array[1] , array[2], array[3], array[4])
+    else:
+        array = [row["date"].strftime("%Y-%m-%d"), "%.1f kg" %row["weight"], "Neck: %.1f cm" % row["neck"], "Waist: %.1f cm" %row["waist"], "Hip: %.1f cm" "Bodyfat: {:.1f} %".format(row["bf"])]
+        string = "| {} | {} | {} | {} | {} | {} |".format(array[0], array[1] , array[2], array[3], array[4], array[5])
+    return string, array
 
 #################################################################################
 # User Input date and duration
