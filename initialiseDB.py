@@ -31,9 +31,7 @@ session.commit()
 
 session.add_all([User(name="Patrick", birthday="1991-05-17", male = True, height=180),
 User(name="Ania", birthday="1994-02-13", male = False, height = 158)])
-
 session.commit()
-
 session.add_all([
 Weight(date = "2018-01-05",weight = 82.2, neck= 40.0, waist= 84.0, hip=0.0, user_id=1),
 Weight(date = "2018-01-11",weight = 81.3, neck= 39.5, waist= 84.0, hip=0.0, user_id=1),
@@ -51,18 +49,37 @@ Weight(date = "2018-05-15",weight = 79.6, neck= 39.5, waist= 83.5, hip=0.0, user
 Weight(date = "2018-05-15",weight = 79.0, neck= 40.0, waist= 82.0, hip=0.0, user_id=1),
 Weight(date = "2018-05-21",weight = 80.3, neck= 40.5, waist= 83.0, hip=0.0, user_id=1),
 Weight(date = "2018-11-07",weight = 83.5, neck= 41.0, waist= 91.0, hip=0.0, user_id=1)])
-
 session.commit()
-
 session.add_all([
 RouteRun(name="Friedhofsrunde",location="Rosenheim",distance = 1.85),
 RouteRun(name="Kleine Mehlmühle",location="Dorfen",distance = 3.19),
 RouteRun(name="Große Mehlmühle",location="Dorfen",distance = 3.84),
 RouteRun(name="kleine Seerunde",location="Krakau",distance = 2.87),
 RouteRun(name="Mangfall 6 Brücken",location="Rosenheim",distance = 6.95)])
-
 session.commit()
 
-session.add_all([MountainType(name="Pass"), MountainType(name="Gipfel"),MountainType(name="Vulkan")])
+session.add_all([
+MountainType(name="Pass"),
+MountainType(name="Gipfel"),
+MountainType(name="Vulkan")])
+session.commit()
+
+#Countries
+session.add_all([
+Country(name="Polen", code="PL"),
+Country(name="Deutschland", code="D"),
+Country(name="Österreich", code="A"),
+Country(name="Deutschland/Österreich", code="A/D")])
+session.commit()
+
+#Mountains
+session.add_all([
+Mountain(name="Turbacz", mrange="Karpaten - Gorce", elevation = 1310, mtype_id=2 , country_id=1),
+Mountain(name="Kasprowy Wierch", mrange="Karpaten - Tatra", elevation = 1987, mtype_id=2 , country_id=1),
+Mountain(name="Kampenwand", mrange="Chiemgauer Alpen", elevation = 1669, mtype_id=2 , country_id=2),
+Mountain(name="Geigelstein", mrange="Chiemgauer Alpen", elevation = 1808, mtype_id=2 , country_id=2),
+Mountain(name="Spitzstein", mrange="Chiemgauer Alpen", elevation = 1598, mtype_id=2 , country_id=4),
+Mountain(name="Heuberg", mrange="Chiemgauer Alpen", elevation = 1338, mtype_id=2 , country_id=2),
+Mountain(name="Karb", mrange="Karpaten - Tatra", elevation = 1853, mtype_id=1 , country_id=1)])
 
 session.commit()
