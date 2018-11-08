@@ -42,12 +42,12 @@ class MountainType(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_mtype,Engine)
+        return readTableFromDB(tb_mtype)
 
     # selecting a Sport from the list in postgreSQL
     @classmethod
     def select(self):
-        mtype = readTableFromDB(tb_mtype,Engine)
+        mtype = readTableFromDB(tb_mtype)
         print(tabulate(routes_in,headers = "keys",tablefmt="psql"))
         while True:
             selection = input("Select Mountain Type: ")
@@ -88,7 +88,7 @@ class Sport(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_sport,Engine)
+        return readTableFromDB(tb_sport)
 
     # selecting a Sport from the list in postgreSQL
     @classmethod
@@ -106,7 +106,7 @@ class Sport(Base):
     # selecting a Sport from the list in postgreSQL
     @classmethod
     def selectName(self, ID):
-        selection = readTableFromDB(tb_sport,Engine)
+        selection = readTableFromDB(tb_sport)
         selection = selection.iloc[ID-1]
         selection = selection['Sport']
         return selection
@@ -141,7 +141,7 @@ class AlpineTrack(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_tracksalpine,Engine)
+        return readTableFromDB(tb_tracksalpine)
 
     # new AlpineTrack
     @classmethod
@@ -209,6 +209,12 @@ class Difficulty(Base):
     def __repr__(self):
         return "<Difficulty (id = '%s', code='%s', sport='%s', description='%s')>" % (
                     self.id, self.code, self.sport.name, self.description)
+
+    # Query for all and return as panda
+    @classmethod
+    def queryAll(self):
+        return pd.read_sql_table(tb_difficulty,Engine, index_col="id")
+
     # new Difficulty
     @classmethod
     def new():
@@ -225,11 +231,6 @@ class Difficulty(Base):
         print("New Sport:\n%s" %(newD.name))
         # Ask if User wants to save new sport
         saveNewInput("sport", newD)
-
-    # Query for all and return as panda
-    @classmethod
-    def queryAll(self):
-        return pd.read_sql_table(tb_difficulty,Engine, index_col="id")
 
     # Query for all and return as panda
     @classmethod
@@ -265,18 +266,18 @@ class Country(Base):
     @classmethod
     def queryAll(self):
         return readTableFromDB(tb_country
-        ,Engine)
+        )
 
 ####################################################################################
 ####################################################################################
 ####################################################################################
-# Class Definition
+# Class Definition MOUNTAIN
 class Mountain(Base):
     __tablename__= tb_mountains
 
     id = Column(Integer, Sequence(mountain_id), primary_key=True)
     name = Column("name",String(80), nullable = False)
-    mrange = Column("Mountainrange",String(50))
+    mrange = Column("mountainrange",String(50))
     elevation = Column("elevation", Integer, nullable=False)
 
     mtype_id = Column(Integer, ForeignKey("%s.id" %(tb_mtype)))
@@ -293,7 +294,12 @@ class Mountain(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_mountains,Engine)
+        countries = readTableFromDB(tb_country)
+        mountains =  readTableFromDB(tb_mountains)
+        mtype = readTableFromDB(tb_mtype)
+        mountains["mname"] = mountains.mtype_id.map(mtype.name.to_dict())
+        mountains["country"] = mountains.country_id.map(countries.code.to_dict())
+        return mountains
 
     # new Mountain
     @classmethod
@@ -333,7 +339,7 @@ class TrackRun(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_tracksrun,Engine)
+        return readTableFromDB(tb_tracksrun)
 
     # Calculate pace
     def pace(self):
@@ -523,13 +529,11 @@ class Weight(Base):
         d = pd.DataFrame(columns=["date", "weight", "waist", "neck", "hip", "bf", "male", "height", "user_id"])
         users = pd.DataFrame()
         # Append postgreSQL Table
-        d = d.append(readTableFromDB(tb_weight,Engine), sort = False)
-        users = users.append(readTableFromDB(tb_users,Engine), sort = False)
+        d = d.append(readTableFromDB(tb_weight), sort = False)
+        users = users.append(readTableFromDB(tb_users), sort = False)
         # extract user height, male
-        height = users.height.to_dict()
-        male = users.male.to_dict()
-        d["male"] = d.user_id.map(male)
-        d["height"] = d.user_id.map(height)
+        d["male"] = d.user_id.map(users.male.to_dict())
+        d["height"] = d.user_id.map(users.height.to_dict())
 
         # iterate through DataFrame
         for index, row in d.iterrows():
@@ -537,8 +541,6 @@ class Weight(Base):
             d.at[index, "bf"] = bodyf
 
         return d
-
-
 
 ####################################################################################
 ####################################################################################
@@ -560,7 +562,7 @@ class RouteRun(Base):
     # Query for all and return as panda
     @classmethod
     def queryAll(self):
-        return readTableFromDB(tb_routes,Engine)
+        return readTableFromDB(tb_routes)
 
     # new Route for running
     @classmethod
@@ -582,7 +584,7 @@ class RouteRun(Base):
     # selecting a Sport from the list in postgreSQL
     @classmethod
     def select(self):
-        routes = readTableFromDB(tb_routes,Engine)
+        routes = readTableFromDB(tb_routes)
         print(tabulate(routes,headers = "keys",tablefmt="psql"))
         while True:
             selection = input("Select Route: ")
